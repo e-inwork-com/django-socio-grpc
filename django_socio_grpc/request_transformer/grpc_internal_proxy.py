@@ -16,15 +16,15 @@ class GRPCInternalProxyContext:
 
     grpc_context: ServicerContext
     grpc_action: str
-    http_request: InternalHttpRequest = None
+    _request: InternalHttpRequest = None
 
     def __post_init__(self):
-        self.http_request = InternalHttpRequest(self, self.grpc_action)
+        self._request = InternalHttpRequest(self, self.grpc_action)
 
     def __getattr__(self, attr):
         if hasattr(self.grpc_context, attr):
             return getattr(self.grpc_context, attr)
-        return getattr(self.http_request, attr)
+        return getattr(self._request, attr)
 
 
 @dataclass

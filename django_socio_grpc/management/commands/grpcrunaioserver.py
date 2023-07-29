@@ -91,7 +91,12 @@ class Command(BaseCommand):
             private_key = open(keyfile).read()
             certificate_chain = open(certfile).read()
             credentials = grpc.ssl_server_credentials(
-                [(private_key, certificate_chain)]
+                (
+                    (
+                        bytes(private_key, 'utf-8'),
+                        bytes(certificate_chain, 'utf-8'),
+                    ),
+                )
             )
             server.add_secure_port(self.address, credentials)
 

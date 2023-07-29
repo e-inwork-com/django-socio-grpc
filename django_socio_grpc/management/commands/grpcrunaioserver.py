@@ -85,7 +85,17 @@ class Command(BaseCommand):
                 await grpc_settings.ROOT_HANDLERS_HOOK(server)
             else:
                 await sync_to_async(grpc_settings.ROOT_HANDLERS_HOOK)(server)
-            server.add_insecure_port(self.address)
+
+            keyfile = 'server-key.pem'
+            certfile = 'server.pem'
+            private_key = open(keyfile).read()
+            certificate_chain = open(certfile).read()
+            credentials = grpc.ssl_server_credentials(
+                [(private_key, certificate_chain)]
+            )
+            server.add_secure_port(self.address, credentials)
+
+            # server.add_insecure_port(self.address)
             await server.start()
             await server.wait_for_termination()
         except OSError as e:

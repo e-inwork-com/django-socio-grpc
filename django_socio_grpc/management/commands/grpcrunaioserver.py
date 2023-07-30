@@ -86,8 +86,8 @@ class Command(BaseCommand):
             else:
                 await sync_to_async(grpc_settings.ROOT_HANDLERS_HOOK)(server)
 
-            keyfile = 'server-key.pem'
-            certfile = 'server.pem'
+            keyfile = 'ssl/server-key.pem'
+            certfile = 'ssl/server.pem'
             private_key = open(keyfile).read()
             certificate_chain = open(certfile).read()
             credentials = grpc.ssl_server_credentials(
